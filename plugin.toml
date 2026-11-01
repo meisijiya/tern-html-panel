@@ -1,0 +1,15 @@
+schema = 1
+id = "tern-html-panel"
+name = "HTML Panel"
+version = "0.1.0"
+description = "粘一个本地 HTML 路径，在 Tern 内置 browser 块里渲染：补地址栏把路径当搜索词、file:// 打不开的缺口。"
+icon = "web"
+
+host = "host.luau"
+window = "window.luau"
+
+[[blocks]]
+id = "html"
+title = "HTML"
+icon = "web"
+palette = false
