@@ -19,3 +19,7 @@
 ## 裸路径（bare path）
 
 不带 scheme 的本地路径，如 `D:/26code/x.html`。Tern 的 browser `open` op 会把它归一化成 `file:///…` 并渲染；显式的 `file:///D:/x.html` 反而可能撞 `WebView2 error 9`。面板一律交裸路径给 op。
+
+## 画中画（picture in picture）
+
+浮在终端之上的独立窗口，不占 tab 的格子。面板用 `cx.layout:float` 浮在右上角，页面由 browser `open` op 的 `corner` 直接开成浮层落在右下角。

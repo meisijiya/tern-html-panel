@@ -30,6 +30,8 @@ tern plugin list            # 期望 ready
 
 同一路径已经开着就聚焦它，不重复开；页面已死（`state.error` 非空）才新开。打开成功后焦点回到面板，接着粘下一个。
 
+面板和页面都默认以画中画浮层出现：面板浮在窗口右上角，页面浮在右下角，都不裂终端的格子、不动 tab 布局。想变常规布局，用 Tern 自带的 `Picture in picture`（`Ctrl+Alt+Shift+P`）切回去。
+
 最近 10 条记在 `tern.kv`，点一条即重开；底部「清空」删掉历史，「刷新」手动重读结果（窗口半边写完结果本来会自己触发一次，这个是兜底）。`Esc` 清输入。
 
 ## 结构
@@ -53,7 +55,7 @@ test/build.sh /path/to/luau      # 或 TERNS_LUAU=... test/build.sh
 ## 真机验收（改完必跑）
 
 1. `tern plugin link .` + `tern plugin reload tern-html-panel` → `tern plugin list` 里 `ready`。
-2. 开面板，粘 `D:/26code/learning-SuperBizAgent/index.html` + Enter → 旁边裂开 browser 块，`tern browser '{"op":"blocks"}' --window <KEY>` 里该块 `title` 非空。
+2. 开面板 → 面板浮在右上角且自带焦点；粘 `D:/26code/learning-SuperBizAgent/index.html` + Enter → 右下角浮出 browser 块，`tern browser '{"op":"blocks"}' --window <KEY>` 里该块 `title` 非空。
 3. 再粘同一路径 → 块数量不变，焦点回到面板。
 4. 反斜杠、`file:///`、带引号三种写法各一次 → 都渲染。
 5. 粘 `D:/nope/x.html` → 面板红字「文件不存在」，不开新块。

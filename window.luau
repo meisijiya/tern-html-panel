@@ -88,7 +88,8 @@ local function openBlock(cx: WindowCx, req: any, path: string)
 		end
 
 		local function openNew(cx3: WindowCx)
-			cx3.browser:call({ op = "open", owner = req.pane, url = path, how = "beside" }):next(function(open: any, err: any, cx4: WindowCx?)
+			-- corner 让 browser 直接开成画中画：不裂终端的格子，也不改 tab 布局。
+			cx3.browser:call({ op = "open", owner = req.pane, url = path, corner = "br" }):next(function(open: any, err: any, cx4: WindowCx?)
 				if cx4 == nil then
 					return
 				end
@@ -164,10 +165,14 @@ local function openPanel(cx: WindowCx)
 			return
 		end
 	end
+	-- 面板浮在终端上（picture in picture），不切走正在看的 tab。
 	local pane = cx:new_block(KIND, nil, "beside")
 	if pane == nil then
 		cx:toast("error", "HTML 面板没有加载", "把插件装在当前机器上再试。")
+		return
 	end
+	cx.layout:float(pane, nil, "tr")
+	cx.layout:focus(pane) -- 浮块不抢焦点，不点它一下键盘就不进去
 end
 
 local function poll(cx: WindowCx?)
