@@ -30,6 +30,24 @@ local function sameFile(url: string, path: string): boolean
 	return resolved.path ~= nil and samePath(resolved.path, path)
 end
 
+--- 面板是不是已经浮着（浮层里就不再动它的位置）。
+local function isFloating(cx: WindowCx, pane: number): boolean
+	local tab = cx.session:tab_of(pane)
+	if tab == nil then
+		return false
+	end
+	local layout = cx.session:layout(tab)
+	if layout == nil or type(layout.floats) ~= "table" then
+		return false
+	end
+	for _, float in ipairs(layout.floats) do
+		if float.pane == pane then
+			return true
+		end
+	end
+	return false
+end
+
 --- 面板所在 tab 里第一个有 cwd 的 agent；没有就用面板自己的 cwd。
 --- shortcut: 同 tab 多个 agent 时取列表里的第一个，不按切分树挑最近的；真觉得挑错了再补。
 local function baseFor(cx: WindowCx, pane: number): string?
@@ -115,6 +133,10 @@ local function openBlock(cx: WindowCx, req: any, path: string)
 			end
 			local live = type(state) == "table" and type(state.ok) == "table" and state.ok.error == nil
 			if live then
+				-- 旧版开出来的是并列块：复用时把它浮到右下角，跟新开的一致。
+				if not isFloating(cx3, found.block) then
+					cx3.layout:float(found.block, nil, "br")
+				end
 				cx3.layout:focus(found.block)
 				record(cx3, req, path, nil)
 				return
@@ -161,6 +183,10 @@ end
 local function openPanel(cx: WindowCx)
 	for _, info in ipairs(cx.session:panes()) do
 		if isPanel(info) then
+			-- 已经开着的面板可能还是旧的并列布局：给它浮起来，别让用户自己去右键。
+			if not isFloating(cx, info.pane) then
+				cx.layout:float(info.pane, nil, "tr")
+			end
 			cx.layout:focus(info.pane)
 			return
 		end
