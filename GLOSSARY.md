@@ -22,4 +22,4 @@
 
 ## 画中画（picture in picture）
 
-浮在终端之上的独立窗口，不占 tab 的格子。面板用 `cx.layout:float` 浮在右上角，页面由 browser `open` op 的 `corner` 直接开成浮层落在右下角。
+浮在终端之上的独立窗口，不占 tab 的格子。这里只指输入面板：`cx.layout:float` 把它浮在右上角。打开的页面是并列的 browser 块，不是浮层。

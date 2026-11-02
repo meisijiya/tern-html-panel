@@ -106,8 +106,8 @@ local function openBlock(cx: WindowCx, req: any, path: string)
 		end
 
 		local function openNew(cx3: WindowCx)
-			-- corner 让 browser 直接开成画中画：不裂终端的格子，也不改 tab 布局。
-			cx3.browser:call({ op = "open", owner = req.pane, url = path, corner = "br" }):next(function(open: any, err: any, cx4: WindowCx?)
+			-- 页面是并列的 browser 块（不是画中画）：只有输入面板浮着。
+			cx3.browser:call({ op = "open", owner = req.pane, url = path, how = "beside" }):next(function(open: any, err: any, cx4: WindowCx?)
 				if cx4 == nil then
 					return
 				end
@@ -133,10 +133,6 @@ local function openBlock(cx: WindowCx, req: any, path: string)
 			end
 			local live = type(state) == "table" and type(state.ok) == "table" and state.ok.error == nil
 			if live then
-				-- 旧版开出来的是并列块：复用时把它浮到右下角，跟新开的一致。
-				if not isFloating(cx3, found.block) then
-					cx3.layout:float(found.block, nil, "br")
-				end
 				cx3.layout:focus(found.block)
 				record(cx3, req, path, nil)
 				return
