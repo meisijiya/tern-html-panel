@@ -211,15 +211,6 @@ local function poll(cx: WindowCx?)
 	tern.timer(POLL_MS, poll)
 end
 
---- 状态栏显示最近打开的那个文件，点它开面板。
-local function latest(): string?
-	local entries = store.history()
-	if type(entries) == "table" and type(entries[1]) == "string" then
-		return string.match(entries[1], "([^/]+)$") or entries[1]
-	end
-	return nil
-end
-
 tern.command({
 	id = "panel",
 	title = "HTML 面板",
@@ -227,11 +218,13 @@ tern.command({
 	run = openPanel,
 })
 
+-- The segment is a fixed entry label, not the last opened file: a file name
+-- can be long, and plugin segments render at the end of the status line, so
+-- a long one pushes the other plugins' segments off the row.
 tern.chrome.status(function(_pane)
-	local name = latest()
 	return {
 		{
-			text = name or "HTML",
+			text = "HTML",
 			icon = "web",
 			command = "plugin.tern-html-panel.panel",
 		},
